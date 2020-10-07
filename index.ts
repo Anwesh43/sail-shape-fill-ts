@@ -167,7 +167,7 @@ class SSFNode {
         DrawingUtil.drawSSFNode(context, this.i, this.state.scale)
     }
 
-    uodate(cb : Function) {
+    update(cb : Function) {
         this.state.update(cb)
     }
 
@@ -185,5 +185,28 @@ class SSFNode {
         }
         cb()
         return this 
+    }
+}
+
+class SailShapeFill {
+
+    curr : SSFNode = new SSFNode(0)
+    dir : number = 1 
+
+    draw(context : CanvasRenderingContext2D) {
+        this.curr.draw(context)
+    }
+
+    update(cb : Function) {
+        this.curr.update(() => {
+            this.curr = this.curr.getNext(this.dir, () => {
+                this.dir *= -1
+            }) 
+            cb()
+        })
+    }
+
+    startUpdating(cb : Function) {
+        this.curr.startUpdating(cb)
     }
 }
